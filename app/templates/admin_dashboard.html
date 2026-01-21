@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+<section>
+  <h3>Articles ({{ articles|length }})</h3>
+  <ul>
+  {% for a in articles %}
+    <li>{{ a.title }} — <small>{{ a.created_at.strftime('%Y-%m-%d') }}</small></li>
+  {% endfor %}
+  </ul>
+</section>
+<section>
+  <h3>Categories ({{ categories|length }})</h3>
+  <ul>
+  {% for c in categories %}
+    <li>{{ c.name }}</li>
+  {% endfor %}
+  </ul>
+</section>
+{% endblock %}

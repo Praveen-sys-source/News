@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>Manage Categories</h2>
+<form method="post">
+  <input name="name" placeholder="Category name" required>
+  <button type="submit">Add</button>
+</form>
+<ul>
+  {% for c in categories %}
+    <li>{{ c.name }} - id: {{ c.id }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

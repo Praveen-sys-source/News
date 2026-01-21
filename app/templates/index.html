@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block content %}
+<section>
+  <h2>Live Headlines</h2>
+  <div id="live-news"></div>
+</section>
+<section>
+  <h2>Internal Articles</h2>
+  <ul>
+  {% for a in articles %}
+    <li><a href="/articles/{{a.id}}">{{ a.title }}</a> - {{ a.created_at.strftime('%Y-%m-%d') }}</li>
+  {% endfor %}
+  </ul>
+</section>
+
+<script>
+fetch('/api/live')
+  .then(r=>r.json())
+  .then(data=>{
+    const container = document.getElementById('live-news');
+    if(!data.articles) { container.innerText = 'No data'; return }
+    data.articles.slice(0,8).forEach(item=>{
+      const d = document.createElement('div');
+      d.className = 'live-item';
+      d.innerHTML = `<h3><a target="_blank" href="${item.url}">${item.title}</a></h3><p>${item.description||''}</p>`;
+      container.appendChild(d);
+    })
+  })
+  .catch(err=>{ document.getElementById('live-news').innerText = 'Error loading live news'; })
+</script>
+
+{% endblock %}

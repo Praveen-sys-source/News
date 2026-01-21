@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>Categories</h2>
+<ul>
+  {% for c in categories %}
+    <li>{{ c.name }} ({{ c.id }})</li>
+  {% endfor %}
+</ul>
+<p><a href="/categories/manage">Manage categories</a></p>
+{% endblock %}

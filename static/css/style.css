@@ -328,6 +328,10 @@ body {
     border-bottom: 1px solid var(--border-color);
 }
 
+.sidebar-logo span {
+    color: var(--text-primary);
+}
+
 /* Sidebar navigation */
 .sidebar-nav {
     flex: 1;

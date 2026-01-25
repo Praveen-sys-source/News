@@ -19,6 +19,14 @@ def articles_page():
     return render_template('articles.html', articles=articles)
 
 
+@article_bp.route('/latest')
+def latest_news():
+    """Show latest created news articles with timestamps"""
+    articles = list_articles()
+    categories = list_categories()
+    return render_template('latest.html', articles=articles, categories=categories)
+
+
 @article_bp.route('/live')
 def live_news():
     news_api_key = 'pub_b6ea65c0579b42b5a8f61d11f2eac14f'

@@ -124,6 +124,7 @@
                                     data-title="{{ article.title }}"
                                     data-category="{{ article.category.id if article.category else '' }}"
                                     data-content="{{ article.content }}"
+                                    data-image-url="{{ article.image_url if article.image_url else '' }}"
                                     title="Edit Article"
                                 >
                                     ✏️ Edit
@@ -195,6 +196,56 @@
                 >
             </div>
 
+            <!-- Image URL Field -->
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Featured Image</label>
+                <input type="hidden" id="editImageUrl" name="image_url" value="">
+                
+                <!-- Image Upload Options -->
+                <div class="flex flex-col gap-4">
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition duration-200" id="editImageDropZone">
+                        <input 
+                            type="file" 
+                            id="editImageFile" 
+                            accept="image/*"
+                            class="hidden"
+                        >
+                        <label for="editImageFile" class="cursor-pointer">
+                            <svg class="w-10 h-10 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <p class="text-gray-600 font-medium text-sm">Click to upload image</p>
+                            <p class="text-gray-500 text-xs">PNG, JPG, GIF, WEBP (Max 10MB)</p>
+                        </label>
+                    </div>
+                    
+                    <p class="text-center text-gray-500 font-medium text-sm">— OR —</p>
+                    
+                    <button 
+                        type="button" 
+                        onclick="openEditMediaLibrary()"
+                        class="bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-700 transition duration-200 flex items-center justify-center gap-2"
+                    >
+                        📷 Select from Media Library
+                    </button>
+                </div>
+                
+                <!-- Image Preview -->
+                <div id="editImagePreview" class="hidden mt-4 p-3 bg-gray-100 rounded-lg">
+                    <p class="text-sm font-semibold text-gray-700 mb-2">Current Image:</p>
+                    <img id="editPreviewImg" src="" alt="Preview" class="max-w-full max-h-40 object-contain rounded-lg border border-gray-200 bg-white">
+                    <div class="flex gap-2 mt-2">
+                        <button 
+                            type="button" 
+                            onclick="clearEditImage()"
+                            class="text-red-600 hover:text-red-800 text-sm font-semibold flex items-center gap-1"
+                        >
+                            🗑️ Remove Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="mb-6">
                 <label for="editCategory" class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
                 <select 
@@ -242,6 +293,23 @@
     </div>
 </div>
 
+<!-- Media Library Modal for Edit -->
+<div id="editMediaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-2xl max-w-4xl w-full mx-4 my-8 max-h-[80vh] flex flex-col">
+        <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+            <h3 class="text-xl font-bold text-gray-900">📷 Select Image</h3>
+            <button onclick="closeEditMediaLibrary()" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="p-4 flex-1 overflow-y-auto" id="editMediaLibraryContent">
+            <p class="text-gray-600 text-center">Loading media library...</p>
+        </div>
+    </div>
+</div>
+
 <!-- Stats Section -->
 <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
     <div class="bg-white rounded-lg shadow-md p-6 text-center">
@@ -262,19 +330,178 @@
 
 {% block scripts %}
 <script>
+// Image upload elements for edit modal
+const editImageFileInput = document.getElementById('editImageFile');
+const editImageDropZone = document.getElementById('editImageDropZone');
+const editImageUrlInput = document.getElementById('editImageUrl');
+const editImagePreview = document.getElementById('editImagePreview');
+const editPreviewImg = document.getElementById('editPreviewImg');
+
 // Article Management Functions
-function editArticle(id, title, categoryId, content) {
+function editArticle(id, title, categoryId, content, imageUrl = '') {
     document.getElementById('editArticleId').value = id;
     document.getElementById('editTitle').value = title;
     document.getElementById('editCategory').value = categoryId;
     document.getElementById('editContent').value = content;
+    
+    // Set image URL
+    editImageUrlInput.value = imageUrl || '';
+    if (imageUrl) {
+        editPreviewImg.src = imageUrl;
+        editImagePreview.classList.remove('hidden');
+    } else {
+        editImagePreview.classList.add('hidden');
+    }
+    
     updateCharCount();
     document.getElementById('editModal').classList.remove('hidden');
     document.getElementById('editTitle').focus();
 }
 
+// Clear edit image
+function clearEditImage() {
+    editImageUrlInput.value = '';
+    editPreviewImg.src = '';
+    editImagePreview.classList.add('hidden');
+}
+
+// Open media library for edit
+async function openEditMediaLibrary() {
+    const modal = document.getElementById('editMediaModal');
+    const content = document.getElementById('editMediaLibraryContent');
+    modal.classList.remove('hidden');
+    
+    try {
+        const response = await fetch('/api/media');
+        const data = await response.json();
+        
+        if (data.media && data.media.length > 0) {
+            content.innerHTML = `
+                <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    ${data.media.map(item => `
+                        <div class="media-item group relative bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 transition duration-200" onclick="selectEditMedia('${item.file_path}')">
+                            <div class="aspect-square">
+                                <img 
+                                    src="${item.file_path}" 
+                                    alt="${item.original_name}"
+                                    class="w-full h-full object-cover"
+                                    onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect fill=%22%23f3f4f6%22 width=%22100%22 height=%22100%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2212%22 fill=%22%239ca3af%22>No+Image</text></svg>'"
+                                >
+                            </div>
+                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition duration-200 flex items-center justify-center">
+                                <span class="text-white font-semibold opacity-0 group-hover:opacity-100 transition duration-200">Select</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        } else {
+            content.innerHTML = `
+                <div class="text-center py-8">
+                    <p class="text-gray-600 mb-4">No images in media library.</p>
+                    <a href="/media/manage" class="bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-700 transition duration-200 inline-block">
+                        📤 Upload Images
+                    </a>
+                </div>
+            `;
+        }
+    } catch (error) {
+        content.innerHTML = `<p class="text-red-600 text-center">Error loading media library.</p>`;
+    }
+}
+
+// Close media library for edit
+function closeEditMediaLibrary() {
+    document.getElementById('editMediaModal').classList.add('hidden');
+}
+
+// Select media for edit
+function selectEditMedia(filePath) {
+    editImageUrlInput.value = filePath;
+    editPreviewImg.src = filePath;
+    editImagePreview.classList.remove('hidden');
+    closeEditMediaLibrary();
+}
+
+// Edit image file upload handler
+editImageFileInput.addEventListener('change', async function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+    }
+    
+    // Validate file size (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+        alert('File size must be less than 10MB');
+        return;
+    }
+    
+    // Upload the image
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+        const response = await fetch('/api/media', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            editImageUrlInput.value = data.media.file_path;
+            editPreviewImg.src = data.media.file_path;
+            editImagePreview.classList.remove('hidden');
+        } else {
+            const error = await response.json();
+            alert(error.error || 'Failed to upload image');
+        }
+    } catch (error) {
+        console.error('Upload error:', error);
+        alert('Failed to upload image');
+    }
+});
+
+// Drag and drop support for edit image upload
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    editImageDropZone.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+['dragenter', 'dragover'].forEach(eventName => {
+    editImageDropZone.addEventListener(eventName, () => {
+        editImageDropZone.classList.add('border-blue-500', 'bg-blue-50');
+    }, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    editImageDropZone.addEventListener(eventName, () => {
+        editImageDropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    }, false);
+});
+
+editImageDropZone.addEventListener('drop', (e) => {
+    const files = e.dataTransfer.files;
+    if (files.length) {
+        editImageFileInput.files = files;
+        const event = new Event('change');
+        editImageFileInput.dispatchEvent(event);
+    }
+});
+
 function closeEditModal() {
     document.getElementById('editModal').classList.add('hidden');
+    // Clear image upload
+    editImageFileInput.value = '';
+    editImageUrlInput.value = '';
+    editImagePreview.classList.add('hidden');
 }
 
 function updateCharCount() {
@@ -288,6 +515,7 @@ function submitEdit(event) {
     const title = document.getElementById('editTitle').value;
     const categoryId = document.getElementById('editCategory').value || null;
     const content = document.getElementById('editContent').value;
+    const imageUrl = document.getElementById('editImageUrl').value;
 
     fetch(`/api/articles/${id}`, {
         method: 'PUT',
@@ -297,7 +525,8 @@ function submitEdit(event) {
         body: JSON.stringify({ 
             title: title, 
             content: content, 
-            category_id: categoryId 
+            category_id: categoryId,
+            image_url: imageUrl
         })
     })
     .then(response => {
@@ -366,7 +595,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const title = this.dataset.title;
             const categoryId = this.dataset.category;
             const content = this.dataset.content;
-            editArticle(id, title, categoryId, content);
+            const imageUrl = this.dataset.imageUrl || '';
+            editArticle(id, title, categoryId, content, imageUrl);
         });
     });
 

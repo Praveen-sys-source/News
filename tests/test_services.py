@@ -1,7 +1,7 @@
 import os
 os.environ['DATABASE_URL'] = 'sqlite:///:memory:'
 
-from app.main import create_app
+from app import create_app
 from app.services.category_service import list_categories, create_category
 from app.services.article_service import list_articles, create_article, get_article
 

@@ -76,3 +76,4 @@ def api_modify_article(aid):
     data = request.json
     a = update_article(aid, data.get('title'), data.get('content'), data.get('category_id'), data.get('image_url'), data.get('author'))
     return jsonify(a.to_dict()) if a else ('Not found', 404)
+

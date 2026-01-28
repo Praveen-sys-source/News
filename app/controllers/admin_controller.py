@@ -10,3 +10,4 @@ def dashboard():
     articles = list_articles()
     categories = list_categories()
     return render_template('admin_dashboard.html', articles=articles, categories=categories)
+

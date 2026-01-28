@@ -1,5 +1,7 @@
 from app.models.article import Article
 from app.models.db import db
+from datetime import datetime, timezone
+
 
 def list_articles():
     return Article.query.order_by(Article.created_at.desc()).all()
@@ -32,3 +34,4 @@ def delete_article(article_id):
     db.session.delete(a)
     db.session.commit()
     return True
+

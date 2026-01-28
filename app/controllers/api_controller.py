@@ -51,3 +51,4 @@ def sources():
 def health():
     """Health check endpoint"""
     return jsonify({'status': 'healthy', 'message': 'API is running'})
+

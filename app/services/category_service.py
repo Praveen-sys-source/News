@@ -28,3 +28,4 @@ def delete_category(cat_id):
     db.session.delete(c)
     db.session.commit()
     return True
+

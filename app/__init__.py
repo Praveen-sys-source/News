@@ -12,34 +12,31 @@ def create_app():
     static_dir = os.path.join(os.path.dirname(__file__), '..', 'static')
     app = Flask(__name__, static_folder=static_dir, template_folder=template_dir)
     
-    # Use persistent SQLite file-based database
+    # Configure persistent SQLite database
     if os.getenv('DATABASE_URL'):
         db_uri = os.getenv('DATABASE_URL')
     else:
-        # Ensure instance directory exists for database file
-        app_dir = os.path.dirname(os.path.abspath(__file__))
-        instance_dir = os.path.abspath(os.path.join(app_dir, '..', 'instance'))
-        os.makedirs(instance_dir, exist_ok=True)
-        db_path = os.path.join(instance_dir, 'app.db')
+        # Use current working directory for database - ensures persistence
+        db_path = os.path.abspath('news.db')
         db_uri = f'sqlite:///{db_path}'
     
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret')
+    # Ensure database connections are persistent
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-        'connect_args': {'timeout': 15},
+        'connect_args': {'timeout': 15, 'check_same_thread': False},
         'pool_size': 10,
         'pool_recycle': 3600,
+        'pool_pre_ping': True,  # Verify connections before using them
     }
 
     db.init_app(app)
 
-    # Create tables within app context
-    try:
-        with app.app_context():
-            db.create_all()
-    except Exception as e:
-        print(f"Warning: Could not create database tables: {e}")
+    # Create tables within app context (only creates if they don't exist)
+    with app.app_context():
+        db.create_all()
+        print(f"[INFO] Database initialized at: {db_uri}")
     
     app.register_blueprint(article_bp)
     app.register_blueprint(category_bp)

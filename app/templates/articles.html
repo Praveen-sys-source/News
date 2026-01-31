@@ -3,7 +3,7 @@
 {% block title %}All Articles - News Management System{% endblock %}
 
 {% block content %}
-<div class="mb-8 flex items-center justify-between">
+<div class="mb-8 slide-in-left flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
     <div>
         <h1 class="text-4xl font-bold text-gray-900 mb-4 flex items-center gap-3">
             <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -13,24 +13,24 @@
         </h1>
         <p class="text-gray-600 text-lg">Browse through our collection of articles</p>
     </div>
-    <a href="/manage" class="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition duration-200 inline-flex items-center space-x-2 h-fit">
+    <a href="/manage" class="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition duration-200 inline-flex items-center space-x-2 h-fit shrink-0">
         <span>⚙️</span>
         <span>Manage News</span>
     </a>
 </div>
 
 <!-- Search and Filter Section -->
-<div class="bg-white rounded-lg shadow-md p-6 mb-8">
+<div class="bg-white rounded-lg shadow-md p-6 mb-8 form-group-animate">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <input 
             type="text" 
             id="searchInput" 
             placeholder="Search articles..." 
-            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus-glow"
         >
         <select 
             id="categoryFilter" 
-            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus-glow bg-white"
         >
             <option value="">All Categories</option>
             <option value="">Featured</option>
@@ -46,11 +46,12 @@
 </div>
 
 <!-- Articles Grid -->
+<!-- DEBUG: Articles count = {{ articles|length }} -->
 {% if articles %}
 <div id="articlesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
 {% for article in articles %}
-    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition duration-200 overflow-hidden article-card" data-title="{{ article.title|lower }}" data-category="{{ article.category.name if article.category else ''|lower }}">
-        <div class="relative">
+    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition duration-200 overflow-hidden article-card-animate card-hover-lift" data-title="{{ article.title|lower }}" data-category="{{ article.category.name if article.category else ''|lower }}">
+        <div class="relative zoom-subtle">
             {% if article.image_url %}
             <div class="h-40 overflow-hidden">
                 <img 
@@ -66,7 +67,7 @@
             </div>
             {% endif %}
             {% if article.category %}
-            <div class="absolute top-3 right-3 bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-semibold">
+            <div class="absolute top-3 right-3 bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-semibold badge-animate">
                 {{ article.category.name }}
             </div>
             {% endif %}
@@ -80,7 +81,7 @@
             <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
                 {% if article.author %}
                 <span class="flex items-center space-x-1">
-                    <span>✍️</span>
+                    <span class="icon-bounce">✍️</span>
                     <span>{{ article.author }}</span>
                 </span>
                 {% else %}
@@ -94,7 +95,7 @@
             
             <a 
                 href="/articles/{{ article.id }}" 
-                class="inline-block bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-700 transition duration-200"
+                class="inline-block bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-700 transition duration-200 hover:scale-105 transform"
             >
                 Read Full Article
             </a>
@@ -143,7 +144,7 @@ const searchInput = document.getElementById('searchInput');
 const categoryFilter = document.getElementById('categoryFilter');
 const articlesContainer = document.getElementById('articlesContainer');
 const emptyState = document.getElementById('emptyState');
-const articleCards = document.querySelectorAll('.article-card');
+const articleCards = document.querySelectorAll('.article-card-animate');
 
 function filterArticles() {
     const searchTerm = searchInput.value.toLowerCase();

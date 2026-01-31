@@ -3,11 +3,11 @@
 {% block title %}Live News - NewsHub{% endblock %}
 
 {% block content %}
-<div class="mb-8">
-    <div class="flex items-center justify-between mb-4">
+<div class="mb-8 scale-in">
+    <div class="flex items-center justify-between mb-4 slide-in-left">
         <div>
             <h1 class="text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-                <svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-10 h-10 text-red-600 live-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                 </svg>
                 🔴 Live News
@@ -15,7 +15,7 @@
             <p class="text-gray-600 text-lg">Breaking news and latest updates from around the world</p>
         </div>
         <div class="text-center">
-            <span class="inline-block bg-red-100 text-red-800 px-4 py-2 rounded-full font-semibold text-sm">
+            <span class="inline-block bg-red-100 text-red-800 px-4 py-2 rounded-full font-semibold text-sm badge-animate">
                 📡 Live Feed
             </span>
         </div>
@@ -23,17 +23,17 @@
 </div>
 
 <!-- Search and Filter Section -->
-<div class="bg-white rounded-lg shadow-md p-6 mb-8">
+<div class="bg-white rounded-lg shadow-md p-6 mb-8 form-group-animate">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <input 
             type="text" 
             id="searchInput" 
             placeholder="Search news by keyword..." 
-            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus-glow"
         >
         <select 
             id="categoryFilter" 
-            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus-glow bg-white"
         >
             <option value="">All Categories</option>
             <option value="business">Business</option>
@@ -45,7 +45,7 @@
         </select>
         <select 
             id="sortFilter" 
-            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus-glow bg-white"
         >
             <option value="publishedAt">Latest First</option>
             <option value="popularity">Most Popular</option>
@@ -53,7 +53,7 @@
         </select>
         <button 
             onclick="loadLiveNews()" 
-            class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 font-semibold flex items-center justify-center gap-2"
+            class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 font-semibold flex items-center justify-center gap-2 hover:scale-105 transform"
         >
             🔄 Refresh
         </button>

@@ -18,10 +18,6 @@ A comprehensive news management system built with Flask backend and vanilla Java
 News/
 ├── app.py                          # Main application entry point
 ├── requirements.txt                # Python dependencies
-├── cert.pem                        # SSL certificate (for HTTPS)
-├── key.pem                         # SSL private key (for HTTPS)
-├── README.md                       # This file
-├── TODO.md                         # Development tasks and roadmap
 ├── .env                            # Environment variables (create this)
 │
 ├── app/                            # Main application package
@@ -91,14 +87,7 @@ News/
 │   └── news.db                    # SQLite database
 │
 └── Documentation Files:
-    ├── IMPORT_STRUCTURE_DIAGRAM.md
-    ├── IMPORT_AUDIT_COMPLETE.md
-    ├── LIVE_NEWS_COMPLETE_SUMMARY.md
-    ├── LIVE_NEWS_DOCUMENTATION.md
-    ├── LIVE_NEWS_IMPLEMENTATION.md
-    ├── MANAGE_NEWS_DOCUMENTATION.md
-    ├── MANAGE_NEWS_IMPLEMENTATION.md
-    └── MANAGE_NEWS_QUICK_REFERENCE.md
+    ├──README.md
 ```
 
 ## Database Schema

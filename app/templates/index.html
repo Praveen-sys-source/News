@@ -35,10 +35,10 @@
     </h2>
     <div class="category-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {% for category in categories %}
-        <a href="/articles?category={{ category.id }}" class="category-card bg-white p-4 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition duration-200 text-center">
-            <div class="text-2xl mb-2">📰</div>
-            <h3 class="font-semibold text-gray-800 truncate">{{ category.name }}</h3>
-            <p class="text-sm text-gray-500 mt-2">Explore</p>
+        <a href="/articles?category={{ category.id }}" class="category-card category-card-modern p-4 rounded-lg shadow-md hover:shadow-lg text-center tile-interactive">
+            <div class="text-3xl mb-3 relative z-10">📰</div>
+            <h3 class="font-bold text-gray-900 truncate relative z-10">{{ category.name }}</h3>
+            <p class="text-sm text-gray-500 mt-2 relative z-10">Explore</p>
         </a>
         {% endfor %}
     </div>
@@ -60,27 +60,27 @@
     {% if articles %}
     <div class="articles-list space-y-6">
         {% for article in articles[:3] %}
-        <div class="article-card bg-white rounded-lg shadow-md hover:shadow-lg transition duration-200 overflow-hidden">
+        <div class="article-card article-card-modern bg-white rounded-xl shadow-md overflow-hidden">
             <div class="p-6">
-                <div class="flex items-start justify-between mb-3">
+                <div class="flex items-start justify-between mb-3 flex-wrap gap-2">
                     <h3 class="text-2xl font-bold text-gray-900 flex-1 pr-4">
-                        <a href="/articles/{{ article.id }}" class="hover:text-blue-600 transition duration-200">
+                        <a href="/articles/{{ article.id }}" class="hover:text-blue-600 transition duration-200 hover:underline decoration-2 underline-offset-2">
                             {{ article.title }}
                         </a>
                     </h3>
                     {% if article.category %}
-                    <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-semibold flex-shrink-0">
+                    <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-semibold flex-shrink-0 badge-animate">
                         {{ article.category.name }}
                     </span>
                     {% endif %}
                 </div>
                 <p class="text-gray-600 mb-4 line-clamp-3">{{ article.content[:200] }}...</p>
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between flex-wrap gap-3">
                     <div class="flex items-center space-x-4 text-sm text-gray-500">
                         {% if article.author %}
                         <span class="flex items-center space-x-1">
-                            <span>✍️</span>
-                            <span>{{ article.author }}</span>
+                            <span class="icon-bounce-hover">✍️</span>
+                            <span class="font-medium">{{ article.author }}</span>
                         </span>
                         {% endif %}
                         <span class="flex items-center space-x-1">
@@ -88,8 +88,9 @@
                             <span>{{ article.created_at.strftime('%B %d, %Y') if article.created_at else 'Recently' }}</span>
                         </span>
                     </div>
-                    <a href="/articles/{{ article.id }}" class="text-blue-600 font-semibold hover:text-blue-800 transition duration-200">
-                        Read More →
+                    <a href="/articles/{{ article.id }}" class="text-blue-600 font-semibold hover:text-blue-800 transition duration-200 flex items-center gap-1 group">
+                        Read More 
+                        <span class="group-hover:translate-x-1 transition-transform">→</span>
                     </a>
                 </div>
             </div>
@@ -114,13 +115,23 @@
 
 <!-- Quick Stats -->
 <section class="stats-section grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-    <div class="stat-card bg-white rounded-lg shadow-md p-6 text-center">
-        <div class="text-4xl font-bold text-blue-600 mb-2">{{ articles|length }}</div>
-        <p class="text-gray-600">Total Articles</p>
+    <div class="stat-card stat-card-modern bg-white rounded-xl shadow-md p-6 text-center tile-interactive">
+        <div class="stat-icon bg-blue-100 text-blue-600 mb-3 mx-auto">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+            </svg>
+        </div>
+        <div class="stat-value text-blue-600 mb-2">{{ articles|length }}</div>
+        <p class="stat-label text-gray-600">Total Articles</p>
     </div>
-    <div class="stat-card bg-white rounded-lg shadow-md p-6 text-center">
-        <div class="text-4xl font-bold text-green-600 mb-2">{{ categories|length }}</div>
-        <p class="text-gray-600">Categories</p>
+    <div class="stat-card stat-card-modern bg-white rounded-xl shadow-md p-6 text-center tile-interactive">
+        <div class="stat-icon bg-green-100 text-green-600 mb-3 mx-auto">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a2 2 0 012-2z"></path>
+            </svg>
+        </div>
+        <div class="stat-value text-green-600 mb-2">{{ categories|length }}</div>
+        <p class="stat-label text-gray-600">Categories</p>
     </div>
 </section>
 {% endblock %}

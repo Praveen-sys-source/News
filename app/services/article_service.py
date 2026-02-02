@@ -6,6 +6,12 @@ from datetime import datetime, timezone
 def list_articles():
     return Article.query.order_by(Article.created_at.desc()).all()
 
+def list_articles_by_category(category_id):
+    """List articles filtered by category ID"""
+    if category_id:
+        return Article.query.filter_by(category_id=category_id).order_by(Article.created_at.desc()).all()
+    return Article.query.order_by(Article.created_at.desc()).all()
+
 def get_article(article_id):
     return db.session.get(Article, article_id)
 

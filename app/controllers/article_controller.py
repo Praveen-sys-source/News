@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
-from app.services.article_service import list_articles, get_article, create_article, update_article, delete_article
-from app.services.category_service import list_categories
+from app.services.article_service import list_articles, list_articles_by_category, get_article, create_article, update_article, delete_article
+from app.services.category_service import list_categories, get_category
 
 article_bp = Blueprint('articles', __name__, template_folder='templates')
 
@@ -15,8 +15,16 @@ def home():
 
 @article_bp.route('/articles')
 def articles_page():
-    articles = list_articles()
-    return render_template('articles.html', articles=articles)
+    category_id = request.args.get('category')
+    if category_id:
+        articles = list_articles_by_category(int(category_id))
+        category = get_category(int(category_id))
+        selected_category = category.name if category else ''
+    else:
+        articles = list_articles()
+        selected_category = ''
+    categories = list_categories()
+    return render_template('articles.html', articles=articles, categories=categories, selected_category=selected_category)
 
 
 @article_bp.route('/latest')

@@ -86,20 +86,45 @@
         </div>
     </article>
 
-    <!-- Related Articles Section -->
+<!-- Related Articles Section -->
     <section class="mt-16">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6 section-header-animate">Related Articles</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 section-header-animate flex items-center gap-3">
+            <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            Related Articles
+        </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-200 card-hover-lift category-card-animate">
-                <h3 class="text-lg font-bold text-gray-900 mb-3">Latest Articles</h3>
+            <div class="related-card-modern bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition duration-200 category-card-animate">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900">Latest Articles</h3>
+                </div>
                 <p class="text-gray-600 text-sm mb-4">Stay updated with the freshest content from our platform.</p>
-                <a href="/articles" class="text-blue-600 font-semibold hover:text-blue-800 hover-underline transition duration-200">Explore More →</a>
+                <a href="/articles" class="text-blue-600 font-semibold hover:text-blue-800 flex items-center gap-1 transition duration-200 group">
+                    Explore More 
+                    <span class="group-hover:translate-x-1 transition-transform">→</span>
+                </a>
             </div>
             {% if article.category %}
-            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-200 card-hover-lift category-card-animate">
-                <h3 class="text-lg font-bold text-gray-900 mb-3">More from {{ article.category.name }}</h3>
+            <div class="related-card-modern bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition duration-200 category-card-animate">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a2 2 0 012-2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900">More from {{ article.category.name }}</h3>
+                </div>
                 <p class="text-gray-600 text-sm mb-4">Discover more articles in the {{ article.category.name }} category.</p>
-                <a href="/articles?category={{ article.category.id }}" class="text-blue-600 font-semibold hover:text-blue-800 hover-underline transition duration-200">Browse Category →</a>
+                <a href="/articles?category={{ article.category.id }}" class="text-purple-600 font-semibold hover:text-purple-800 flex items-center gap-1 transition duration-200 group">
+                    Browse Category 
+                    <span class="group-hover:translate-x-1 transition-transform">→</span>
+                </a>
             </div>
             {% endif %}
         </div>

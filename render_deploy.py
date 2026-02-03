@@ -35,9 +35,13 @@ def ensure_sample_data():
     app = create_app()
     
     with app.app_context():
-        # Create tables
-        db.create_all()
-        print("✅ Database tables created")
+        try:
+            # Create tables
+            db.create_all()
+            print("✅ Database tables created")
+        except Exception as e:
+            print(f"⚠️  Database table creation warning: {e}")
+            # Continue anyway as tables might already exist
         
         # Setup media directories
         setup_media_directories()

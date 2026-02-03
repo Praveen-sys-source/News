@@ -12,29 +12,41 @@ def create_app():
     static_dir = os.path.join(os.path.dirname(__file__), '..', 'static')
     app = Flask(__name__, static_folder=static_dir, template_folder=template_dir)
     
-    # Configure persistent SQLite database
-    if os.getenv('DATABASE_URL'):
-        db_uri = os.getenv('DATABASE_URL')
+    # Configure database - PostgreSQL for production, SQLite for development
+    database_url = os.getenv('DATABASE_URL')
+    if database_url:
+        # Production: Use PostgreSQL from Render.com
+        if database_url.startswith('postgres://'):
+            # Fix for newer SQLAlchemy versions
+            database_url = database_url.replace('postgres://', 'postgresql://', 1)
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+        app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+            'pool_pre_ping': True,
+            'pool_recycle': 300,
+        }
+        print(f"[INFO] Using PostgreSQL database for production")
     else:
-        # Use current working directory for database - ensures persistence
+        # Development: Use SQLite
         db_path = os.path.abspath('news.db')
-        db_uri = f'sqlite:///{db_path}'
+        app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+        app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+            'connect_args': {'timeout': 15, 'check_same_thread': False},
+            'pool_pre_ping': True,
+        }
+        print(f"[INFO] Using SQLite database for development: {db_path}")
     
-    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret')
-    # Ensure database connections are persistent
-    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-        'connect_args': {'timeout': 15, 'check_same_thread': False},
-        'pool_pre_ping': True,  # Verify connections before using them
-    }
 
     db.init_app(app)
 
     # Create tables within app context (only creates if they don't exist)
     with app.app_context():
-        db.create_all()
-        print(f"[INFO] Database initialized at: {db_uri}")
+        try:
+            db.create_all()
+            print(f"[INFO] Database tables initialized successfully")
+        except Exception as e:
+            print(f"[WARNING] Database initialization error: {e}")
     
     app.register_blueprint(article_bp)
     app.register_blueprint(category_bp)

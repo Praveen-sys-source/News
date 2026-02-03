@@ -15,6 +15,8 @@ services:
         fromSecret: news-api-key
       - key: FLASK_ENV
         value: production
+      - key: PYTHONPATH
+        value: /opt/render/project/src
     disk:
       name: media-storage
       mountPath: /opt/render/project/src/static/uploads

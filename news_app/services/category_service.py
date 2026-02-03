@@ -7,17 +7,18 @@ def list_categories():
 def get_category(cat_id):
     return db.session.get(Category, cat_id)
 
-def create_category(name):
-    c = Category(name=name)
+def create_category(name, description=None):
+    c = Category(name=name, description=description)
     db.session.add(c)
     db.session.commit()
     return c
 
-def update_category(cat_id, name):
+def update_category(cat_id, name, description=None):
     c = get_category(cat_id)
     if not c:
         return None
     c.name = name
+    c.description = description
     db.session.commit()
     return c
 

@@ -59,6 +59,7 @@
             type="text" 
             id="searchInput" 
             placeholder="Search articles..." 
+            value="{{ search_term }}"
             class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus-glow"
         >
         <select 
@@ -87,7 +88,7 @@
 {% if articles %}
 <div id="articlesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
 {% for article in articles %}
-    <div class="article-card-modern bg-white rounded-xl shadow-md overflow-hidden article-card-animate tile-interactive" data-title="{{ article.title|lower }}" data-category="{{ article.category.name if article.category else ''|lower }}">
+    <div class="article-card-modern bg-white rounded-xl shadow-md overflow-hidden article-card-animate tile-interactive" data-title="{{ article.title|lower }}" data-category="{{ article.category.name if article.category else ''|lower }}" data-author="{{ article.author|lower if article.author else '' }}" data-content="{{ article.content[:200]|lower }}">
         <div class="article-card-image relative">
             {% if article.image_url %}
             <div class="h-48 overflow-hidden">
@@ -182,12 +183,122 @@
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/state.js') }}"></script>
 <script>
-// Search and Filter Functionality with Debouncing
+// Search and Filter Functionality
 const searchInput = document.getElementById('searchInput');
 const categoryFilter = document.getElementById('categoryFilter');
 const articlesContainer = document.getElementById('articlesContainer');
 const emptyState = document.getElementById('emptyState');
-const articleCards = document.querySelectorAll('.article-card-animate');
+const articleCount = document.getElementById('articleCount');
+const articleCards = document.querySelectorAll('.article-card-modern');
+
+// Filter articles based on search and category
+function filterArticles() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const selectedCategory = categoryFilter.value.toLowerCase().trim();
+    let visibleCount = 0;
+
+    articleCards.forEach(card => {
+        const title = card.dataset.title || '';
+        const category = card.dataset.category || '';
+        const author = card.dataset.author || '';
+        const content = card.dataset.content || '';
+        
+        const matchesSearch = !searchTerm || 
+            title.includes(searchTerm) || 
+            content.includes(searchTerm) ||
+            author.includes(searchTerm);
+        
+        const matchesCategory = !selectedCategory || 
+            category === selectedCategory;
+        
+        if (matchesSearch && matchesCategory) {
+            card.style.display = 'block';
+            card.style.animation = 'fadeIn 0.3s ease-in';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    // Update UI based on results
+    if (visibleCount === 0) {
+        articlesContainer.style.display = 'none';
+        emptyState.classList.remove('hidden');
+    } else {
+        articlesContainer.style.display = 'grid';
+        emptyState.classList.add('hidden');
+    }
+    
+    // Update count
+    if (articleCount) {
+        articleCount.textContent = visibleCount;
+    }
+}
+
+// Reset all filters
+function resetFilters() {
+    searchInput.value = '';
+    categoryFilter.value = '';
+    filterArticles();
+}
+
+// Category filter redirect
+function filterByCategory() {
+    const selectedCategory = categoryFilter.value;
+    if (selectedCategory) {
+        window.location.href = `/articles?category=${encodeURIComponent(selectedCategory)}`;
+    } else {
+        window.location.href = '/articles';
+    }
+}
+
+// Debounce function for better performance
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Create debounced version of filter function
+const debouncedFilter = debounce(filterArticles, 300);
+
+// Event listeners
+searchInput.addEventListener('input', debouncedFilter);
+categoryFilter.addEventListener('change', filterByCategory);
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Add CSS for animations
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .article-card-modern {
+            transition: all 0.3s ease;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // If there's a search term in URL, apply it
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get('search');
+    if (searchParam) {
+        searchInput.value = searchParam;
+        filterArticles();
+    }
+    
+    // Initial filter on page load
+    filterArticles();
+});
+</script>cument.querySelectorAll('.article-card-animate');
 
 // Debounce function for better performance
 function debounce(func, delay) {

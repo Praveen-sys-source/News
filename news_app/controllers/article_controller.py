@@ -15,16 +15,29 @@ def home():
 
 @article_bp.route('/articles')
 def articles_page():
-    category_id = request.args.get('category')
-    if category_id:
-        articles = list_articles_by_category(int(category_id))
-        category = get_category(int(category_id))
-        selected_category = category.name if category else ''
+    category_name = request.args.get('category')
+    search_term = request.args.get('search')
+    
+    if category_name:
+        # Find category by name
+        categories = list_categories()
+        category = next((cat for cat in categories if cat.name == category_name), None)
+        if category:
+            articles = list_articles_by_category(category.id)
+            selected_category = category.name
+        else:
+            articles = list_articles()
+            selected_category = ''
     else:
         articles = list_articles()
         selected_category = ''
+    
     categories = list_categories()
-    return render_template('articles.html', articles=articles, categories=categories, selected_category=selected_category)
+    return render_template('articles.html', 
+                         articles=articles, 
+                         categories=categories, 
+                         selected_category=selected_category,
+                         search_term=search_term or '')
 
 
 @article_bp.route('/latest')

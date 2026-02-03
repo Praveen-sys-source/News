@@ -1,5 +1,5 @@
-from app.models.media import Media
-from app.models.db import db
+from ..models.media import Media
+from ..models.db import db
 import os
 
 

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
-from app.services.category_service import list_categories, create_category, update_category, delete_category, get_category
+from ..services.category_service import list_categories, create_category, update_category, delete_category, get_category
 
 category_bp = Blueprint('categories', __name__, template_folder='templates')
 

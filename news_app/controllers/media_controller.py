@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
-from app.services.media_service import list_media, create_media, delete_media, count_media
+from ..services.media_service import list_media, create_media, delete_media, count_media
 import os
 import uuid
 from datetime import datetime

@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.services.news_service import top_headlines, search_news, get_sources
+from ..services.news_service import top_headlines, search_news, get_sources
 
 api_bp = Blueprint('api', __name__)
 

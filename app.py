@@ -1,4 +1,4 @@
-from app import create_app
+from news_app import create_app
 import os
 
 # Create app instance for Gunicorn

@@ -1,10 +1,10 @@
 from flask import Flask
-from app.models.db import db
-from app.controllers.article_controller import article_bp
-from app.controllers.category_controller import category_bp
-from app.controllers.admin_controller import admin_bp
-from app.controllers.api_controller import api_bp
-from app.controllers.media_controller import media_bp
+from .models.db import db
+from .controllers.article_controller import article_bp
+from .controllers.category_controller import category_bp
+from .controllers.admin_controller import admin_bp
+from .controllers.api_controller import api_bp
+from .controllers.media_controller import media_bp
 import os
 
 def create_app():

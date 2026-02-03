@@ -1,5 +1,5 @@
-from app.models.article import Article
-from app.models.db import db
+from ..models.article import Article
+from ..models.db import db
 from datetime import datetime, timezone
 
 

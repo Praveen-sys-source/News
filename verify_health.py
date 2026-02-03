@@ -13,10 +13,10 @@ def check_imports():
     print("1. CHECKING IMPORTS & CIRCULAR DEPENDENCIES")
     print("="*60)
     try:
-        from app import create_app
-        from app.models.article import Article
-        from app.models.category import Category
-        from app.models.db import db
+        from news_app import create_app
+        from news_app.models.article import Article
+        from news_app.models.category import Category
+        from news_app.models.db import db
         print("✅ All imports successful - no circular dependencies")
         return True
     except Exception as e:
@@ -29,20 +29,20 @@ def check_models():
     print("2. CHECKING MODEL DEFINITIONS")
     print("="*60)
     try:
-        from app.models.article import Article
-        from app.models.category import Category
+        from news_app.models.article import Article
+        from news_app.models.category import Category
         
         # Check Article model
         article_module = Article.__module__
         print(f"✅ Article model location: {article_module}")
-        if article_module != "app.models.article":
+        if article_module != "news_app.models.article":
             print(f"⚠️  Warning: Article model imported from unexpected location")
             return False
         
         # Check Category model
         category_module = Category.__module__
         print(f"✅ Category model location: {category_module}")
-        if category_module != "app.models.category":
+        if category_module != "news_app.models.category":
             print(f"⚠️  Warning: Category model imported from unexpected location")
             return False
         
@@ -64,7 +64,7 @@ def check_routes():
     print("3. CHECKING ROUTES FOR CONFLICTS")
     print("="*60)
     try:
-        from app import create_app
+        from news_app import create_app
         app = create_app()
         
         routes = {}
@@ -111,7 +111,7 @@ def check_database():
     print("4. CHECKING DATABASE CONFIGURATION")
     print("="*60)
     try:
-        from app import create_app
+        from news_app import create_app
         app = create_app()
         
         db_uri = app.config['SQLALCHEMY_DATABASE_URI']
@@ -134,17 +134,17 @@ def check_database():
         return False
 
 def check_app_structure():
-    """Verify app/__init__.py structure is correct"""
+    """Verify news_app/__init__.py structure is correct"""
     print("\n" + "="*60)
     print("5. CHECKING APPLICATION STRUCTURE")
     print("="*60)
     try:
-        init_file = Path(__file__).parent / "app" / "__init__.py"
+        init_file = Path(__file__).parent / "news_app" / "__init__.py"
         content = init_file.read_text()
         
         # Check that it's clean (no model definitions)
         if "class Article" in content or "class Category" in content:
-            print("❌ Models should not be defined in app/__init__.py")
+            print("❌ Models should not be defined in news_app/__init__.py")
             return False
         
         # Check for create_app function
@@ -153,11 +153,11 @@ def check_app_structure():
             return False
         
         # Check for proper imports
-        if "from app.models.db import db" not in content:
+        if "from .models.db import db" not in content and "from news_app.models.db import db" not in content:
             print("❌ Database import not found")
             return False
         
-        print("✅ app/__init__.py is properly structured")
+        print("✅ news_app/__init__.py is properly structured")
         print("   - No model definitions (models in separate files)")
         print("   - Contains create_app() factory function")
         print("   - Proper imports")
@@ -215,3 +215,4 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
+

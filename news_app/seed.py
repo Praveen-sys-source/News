@@ -1,6 +1,6 @@
-from app import create_app
-from app.services.category_service import create_category, list_categories
-from app.services.article_service import create_article
+from .. import create_app
+from ..services.category_service import create_category, list_categories
+from ..services.article_service import create_article
 
 def seed():
     app = create_app()

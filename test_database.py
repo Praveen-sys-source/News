@@ -3,9 +3,9 @@
 Test script to verify SQLite database functionality
 """
 import sys
-from app import create_app, db
-from app.models.article import Article
-from app.models.category import Category
+from news_app import create_app, db
+from news_app.models.article import Article
+from news_app.models.category import Category
 
 def test_database():
     """Run comprehensive database tests"""

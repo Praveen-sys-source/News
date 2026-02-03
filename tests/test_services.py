@@ -1,15 +1,15 @@
 import os
 os.environ['DATABASE_URL'] = 'sqlite:///:memory:'
 
-from app import create_app
-from app.services.category_service import list_categories, create_category
-from app.services.article_service import list_articles, create_article, get_article
+from news_app import create_app
+from news_app.services.category_service import list_categories, create_category
+from news_app.services.article_service import list_articles, create_article, get_article
 
 
 def test_category_and_article_crud():
     app = create_app()
     with app.app_context():
-        from app.models.db import db
+        from news_app.models.db import db
         db.drop_all()
         db.create_all()
 

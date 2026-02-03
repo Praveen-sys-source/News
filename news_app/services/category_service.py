@@ -1,5 +1,5 @@
-from app.models.category import Category
-from app.models.db import db
+from ..models.category import Category
+from ..models.db import db
 
 def list_categories():
     return Category.query.order_by(Category.id).all()

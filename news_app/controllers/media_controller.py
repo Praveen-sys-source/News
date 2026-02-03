@@ -43,8 +43,8 @@ def upload_media():
     if file_ext not in allowed_extensions:
         return jsonify({'error': f'Invalid file type. Allowed: {", ".join(allowed_extensions)}'}), 400
     
-    # Create uploads directory if it doesn't exist (use project's static folder)
-    upload_folder = '/workspaces/News/static/uploads'
+    # Create uploads directory if it doesn't exist (use relative path)
+    upload_folder = os.path.join('static', 'uploads')
     os.makedirs(upload_folder, exist_ok=True)
     
     # Generate unique filename

@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: news-app
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --timeout 120 --workers 1 --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: news-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: NEWS_API_KEY
+        fromSecret: news-api-key
+      - key: FLASK_ENV
+        value: production
+    disk:
+      mountPath: /workspaces/News/static/uploads
+      size: 256
+
+databases:
+  - name: news-db
+    plan: free
+    databaseName: news
+    user: news
+

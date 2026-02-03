@@ -11,7 +11,7 @@
             </h1>
             <p class="text-gray-600 text-lg">View, edit, and manage all articles</p>
         </div>
-        <a href="/articles/create" class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 hover:scale-105 transition-all duration-200 inline-flex items-center space-x-2">
+        <a href="/articles/create" class="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 hover:scale-105 transition-all duration-200 inline-flex items-center space-x-2">
             <span>➕</span>
             <span>Create New Article</span>
         </a>
@@ -73,9 +73,9 @@
                         <th class="px-6 py-4 text-center text-sm font-bold text-gray-700">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="articlesTable">
+<tbody id="articlesTable">
                     {% for article in articles %}
-                    <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-200 table-row-animate" data-id="{{ article.id }}" data-title="{{ article.title|lower }}" data-category="{{ article.category.id if article.category else '' }}" data-date="{{ article.created_at.strftime('%s') if article.created_at else '0' }}">
+                    <tr class="article-row border-b border-gray-200 hover:bg-gray-50 transition duration-200 table-row-animate" data-id="{{ article.id }}" data-title="{{ article.title|lower }}" data-category="{{ article.category.id if article.category else '' }}" data-date="{{ article.created_at.strftime('%s') if article.created_at else '0' }}">
                         <td class="px-6 py-4 text-sm text-gray-700">
                             <span class="font-mono font-bold text-blue-600">#{{ article.id }}</span>
                         </td>

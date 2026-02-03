@@ -94,22 +94,27 @@ News/
 
 ### Article Model
 - `id`: Integer, Primary Key
-- `title`: String(200)
-- `content`: Text
-- `created_at`: DateTime
-- `category_id`: ForeignKey to Category
+- `title`: String(255), nullable=False
+- `author`: String(100), nullable=True
+- `content`: Text, nullable=False
+- `image_url`: String(500), nullable=True
+- `category_id`: Integer, ForeignKey to Category (nullable=True)
+- `created_at`: DateTime (UTC)
+- `updated_at`: DateTime (UTC)
 
 ### Category Model
 - `id`: Integer, Primary Key
-- `name`: String(100)
-- `description`: Text (optional)
+- `name`: String(100), unique=True, nullable=False
+- `description`: String(255), nullable=True
 
 ### Media Model
 - `id`: Integer, Primary Key
-- `filename`: String(255)
-- `filepath`: String(500)
-- `mime_type`: String(100)
-- `created_at`: DateTime
+- `filename`: String(255), nullable=False
+- `original_name`: String(255), nullable=False
+- `file_type`: String(50), nullable=False
+- `file_size`: Integer, nullable=False (size in bytes)
+- `file_path`: String(500), nullable=False
+- `uploaded_at`: DateTime (UTC)
 
 ## API Endpoints
 

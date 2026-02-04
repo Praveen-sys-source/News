@@ -15,6 +15,8 @@ services:
         value: production
       - key: PYTHONPATH
         value: /opt/render/project/src
+      - key: DISK_MOUNT_PATH
+        value: /opt/render/project/src
     disk:
       name: media-storage
       mountPath: /opt/render/project/src/static/uploads

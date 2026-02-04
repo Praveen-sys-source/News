@@ -43,8 +43,13 @@ def upload_media():
     if file_ext not in allowed_extensions:
         return jsonify({'error': f'Invalid file type. Allowed: {", ".join(allowed_extensions)}'}), 400
     
-    # Create uploads directory if it doesn't exist (use relative path)
-    upload_folder = os.path.join('static', 'uploads')
+    # Create uploads directory if it doesn't exist (use absolute path for Render persistence)
+    # Check if we're on Render (has DISK_MOUNT_PATH env var) or local
+    if os.getenv('DISK_MOUNT_PATH'):
+        upload_folder = os.path.join(os.getenv('DISK_MOUNT_PATH'), 'static', 'uploads')
+    else:
+        upload_folder = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'static', 'uploads')
+    
     os.makedirs(upload_folder, exist_ok=True)
     
     # Generate unique filename

@@ -40,11 +40,17 @@ def create_app():
 
     db.init_app(app)
 
-    # Create tables within app context (only creates if they don't exist)
+    # Create tables and seed data within app context
     with app.app_context():
         try:
+            # Create all tables
             db.create_all()
             print(f"[INFO] Database tables initialized successfully")
+            
+            # Seed initial data if tables are empty
+            from .seed import seed_data
+            seed_data(app)
+            
         except Exception as e:
             print(f"[WARNING] Database initialization error: {e}")
     

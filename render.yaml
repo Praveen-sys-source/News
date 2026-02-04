@@ -5,12 +5,10 @@ services:
     buildCommand: pip install -r requirements.txt && python render_deploy.py
     startCommand: gunicorn app:app --timeout 120 --workers 1 --bind 0.0.0.0:$PORT
     envVars:
-      - key: postgresql://news_db_28y1_user:ECh5Rm8CZED6yJKvOPop1JPbmQNhM6fO@dpg-d6147m1r0fns73cbsiv0-a/news_db_28y1
+      - key: DATABASE_URL
         fromDatabase:
           name: news-db
           property: connectionString
-      - key: ECh5Rm8CZED6yJKvOPop1JPbmQNhM6fO
-        generateValue: true
       - key: NEWS_API_KEY
         fromSecret: news-api-key
       - key: FLASK_ENV

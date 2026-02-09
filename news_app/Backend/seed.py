@@ -102,7 +102,7 @@ def seed_data(app=None, force=False):
     they stay deleted. Only --force flag or empty database will trigger reseeding.
     """
     if app is None:
-        from . import create_app
+        from .. import create_app
         app = create_app()
     
     with app.app_context():
@@ -131,7 +131,7 @@ def seed_data(app=None, force=False):
             print('[INFO] Database is empty. Seeding initial data...')
             
             # Ensure upload directory exists
-            upload_dir = 'static/uploads'
+            upload_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), '..', 'Frontend', 'static', 'uploads')
             os.makedirs(upload_dir, exist_ok=True)
             gitkeep_path = os.path.join(upload_dir, '.gitkeep')
             if not os.path.exists(gitkeep_path):
@@ -183,7 +183,7 @@ def create_app_with_seeding():
     Create Flask app with automatic database seeding.
     This is an alternative to create_app() that ensures data persistence.
     """
-    from . import create_app
+    from .. import create_app
     
     app = create_app()
     

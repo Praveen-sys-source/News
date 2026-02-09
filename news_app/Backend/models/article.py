@@ -1,4 +1,4 @@
-from ..models.db import db
+from .db import db
 from datetime import datetime, timezone
 
 class Article(db.Model):

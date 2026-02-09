@@ -39,7 +39,7 @@ def delete_media(media_id):
         # If on Render, check the DISK_MOUNT_PATH
         if os.getenv('DISK_MOUNT_PATH') and not os.path.isabs(file_path):
             # file_path might be relative, reconstruct with mount path
-            file_path = os.path.join(os.getenv('DISK_MOUNT_PATH'), 'static', 'uploads', media.filename)
+            file_path = os.path.join(os.getenv('DISK_MOUNT_PATH'), 'news_app', 'Frontend', 'static', 'uploads', media.filename)
         
         if os.path.exists(file_path):
             os.remove(file_path)

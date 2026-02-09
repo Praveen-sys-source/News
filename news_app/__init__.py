@@ -1,16 +1,21 @@
-from flask import Flask
-from .models.db import db
-from .controllers.article_controller import article_bp
-from .controllers.category_controller import category_bp
-from .controllers.admin_controller import admin_bp
-from .controllers.api_controller import api_bp
-from .controllers.media_controller import media_bp
+from flask import Flask, send_from_directory, Response
+from .Backend.models.db import db
+from .Backend.controllers.article_controller import article_bp
+from .Backend.controllers.category_controller import category_bp
+from .Backend.controllers.admin_controller import admin_bp
+from .Backend.controllers.api_controller import api_bp
+from .Backend.controllers.media_controller import media_bp
 import os
+import mimetypes
 
 def create_app():
-    template_dir = os.path.join(os.path.dirname(__file__), 'templates')
-    static_dir = os.path.join(os.path.dirname(__file__), '..', 'static')
+    template_dir = os.path.join(os.path.dirname(__file__), 'Frontend', 'templates')
+    static_dir = os.path.join(os.path.dirname(__file__), 'Frontend', 'static')
     app = Flask(__name__, static_folder=static_dir, template_folder=template_dir)
+    
+    # Ensure correct MIME types
+    mimetypes.add_type('text/css', '.css')
+    mimetypes.add_type('application/javascript', '.js')
     
     # Configure database - PostgreSQL for production, SQLite for development
     database_url = os.getenv('DATABASE_URL')
@@ -48,7 +53,7 @@ def create_app():
             print(f"[INFO] Database tables initialized successfully")
             
             # Seed initial data if tables are empty
-            from .seed import seed_data
+            from .Backend.seed import seed_data
             seed_data(app)
             
         except Exception as e:

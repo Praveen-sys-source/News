@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <h1 class="text-2xl font-bold mb-6">Button Test Page</h1>
+    
+    <!-- Mobile Menu Button Test -->
+    <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">Mobile Menu Button Test</h2>
+        <button id="testMobileBtn" class="bg-blue-600 text-white px-4 py-2 rounded">
+            Test Mobile Menu Button
+        </button>
+        <div id="testResult1" class="mt-2 text-green-600"></div>
+    </div>
+    
+    <!-- Theme Toggle Button Test -->
+    <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">Theme Toggle Button Test</h2>
+        <button id="testThemeBtn" class="bg-purple-600 text-white px-4 py-2 rounded">
+            Test Theme Toggle
+        </button>
+        <div id="testResult2" class="mt-2 text-green-600"></div>
+    </div>
+    
+    <!-- Regular Link Test -->
+    <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">Link Test</h2>
+        <a href="#" id="testLink" class="bg-green-600 text-white px-4 py-2 rounded inline-block">
+            Test Link Click
+        </a>
+        <div id="testResult3" class="mt-2 text-green-600"></div>
+    </div>
+
+    <script>
+        console.log('Test script loaded');
+        
+        // Test mobile button
+        document.getElementById('testMobileBtn').addEventListener('click', function(e) {
+            console.log('Mobile button clicked');
+            document.getElementById('testResult1').textContent = 'Mobile button works!';
+        });
+        
+        // Test theme button
+        document.getElementById('testThemeBtn').addEventListener('click', function(e) {
+            console.log('Theme button clicked');
+            document.getElementById('testResult2').textContent = 'Theme button works!';
+        });
+        
+        // Test link
+        document.getElementById('testLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Link clicked');
+            document.getElementById('testResult3').textContent = 'Link works!';
+        });
+        
+        console.log('All event listeners attached');
+    </script>
+</body>
+</html>

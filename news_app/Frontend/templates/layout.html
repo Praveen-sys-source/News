@@ -25,7 +25,7 @@
         </a>
         <!-- Theme Toggle Button -->
         <button 
-            onclick="toggleTheme()" 
+            id="mobileThemeToggle"
             class="theme-toggle p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-yellow-400 transition duration-200 flex items-center justify-center"
             title="Toggle Dark/Light Mode"
         >
@@ -38,7 +38,7 @@
     </div>
 
     <!-- Overlay for mobile -->
-    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
     <!-- Left Sidebar Navigation -->
     <aside id="sidebar" class="sidebar">
@@ -150,7 +150,7 @@
         <!-- Theme Toggle at Bottom -->
         <div class="sidebar-footer">
             <button 
-                onclick="toggleTheme()" 
+                id="sidebarThemeToggle"
                 class="sidebar-theme-toggle"
             >
                 <span class="theme-icon">
@@ -205,22 +205,6 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    
-    <!-- Sidebar Toggle Script -->
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            
-            if (sidebar && overlay) {
-                sidebar.classList.toggle('sidebar-open');
-                overlay.classList.toggle('overlay-visible');
-            }
-        }
-
-        // Mobile menu button click handler
-        document.getElementById('mobileMenuBtn')?.addEventListener('click', toggleSidebar);
-    </script>
     
     <!-- Theme Initialization Script - Prevents flash of wrong theme -->
     <script>

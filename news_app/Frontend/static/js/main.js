@@ -1,8 +1,11 @@
 // NewsHub - Main JavaScript File
 
+// Debug logging
+console.log('Main.js loaded at:', new Date().toISOString());
+
 // Theme Management
 const ThemeManager = (function() {
-    const THEME_KEY = 'newshub-theme';
+    const THEME_KEY = 'news-management-system-theme';
     const DARK_CLASS = 'dark';
 
     function getSystemPreference() {
@@ -72,102 +75,95 @@ const ThemeManager = (function() {
     };
 })();
 
-// Mobile Menu Toggle
+// Global functions - Define these first
+window.toggleSidebar = function() {
+    console.log('toggleSidebar called');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    
+    console.log('Sidebar element:', sidebar);
+    console.log('Overlay element:', sidebarOverlay);
+    
+    if (sidebar && sidebarOverlay) {
+        sidebar.classList.toggle('sidebar-open');
+        sidebarOverlay.classList.toggle('overlay-visible');
+        console.log('Sidebar toggled');
+    } else {
+        console.error('Sidebar or overlay element not found');
+    }
+};
+
+window.toggleTheme = function() {
+    console.log('toggleTheme called');
+    const newTheme = ThemeManager.toggle();
+    console.log('Theme switched to:', newTheme);
+    if (window.showNotification) {
+        showNotification(`Switched to ${newTheme} mode`, 'info');
+    }
+};
+
+// Main initialization
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize theme
+    console.log('DOM Content Loaded');
+    
+    // Initialize theme first
     ThemeManager.init();
 
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
 
-    // Sidebar toggle function
-    function toggleSidebar() {
-        if (sidebar && sidebarOverlay) {
-            sidebar.classList.toggle('sidebar-open');
-            sidebarOverlay.classList.toggle('overlay-visible');
-        }
-    }
+    console.log('Mobile menu button:', mobileMenuBtn);
+    console.log('Sidebar:', sidebar);
+    console.log('Sidebar overlay:', sidebarOverlay);
 
     // Mobile menu button click handler
     if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', toggleSidebar);
+        console.log('Adding click listener to mobile menu button');
+        mobileMenuBtn.addEventListener('click', function(e) {
+            console.log('Mobile menu button clicked!');
+            e.preventDefault();
+            e.stopPropagation();
+            window.toggleSidebar();
+        });
+    } else {
+        console.error('Mobile menu button not found');
     }
 
     // Close sidebar when overlay is clicked
     if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', toggleSidebar);
+        console.log('Adding click listener to sidebar overlay');
+        sidebarOverlay.addEventListener('click', function(e) {
+            console.log('Sidebar overlay clicked!');
+            e.preventDefault();
+            e.stopPropagation();
+            window.toggleSidebar();
+        });
     }
 
-    // Page Transition Handler
-    const PageTransition = (function() {
-        const TRANSITION_DURATION = 300;
-        let isTransitioning = false;
-
-        function preventDefaultNavigation(e) {
-            // Only intercept internal links
-            const href = e.currentTarget.getAttribute('href');
-            
-            // Skip if link is external, has target="_blank", or is an anchor link
-            if (!href || href.startsWith('http') || href.startsWith('//') || 
-                e.currentTarget.getAttribute('target') === '_blank' || 
-                href.startsWith('#') || isTransitioning) {
-                return;
-            }
-
+    // Theme toggle buttons
+    const mobileThemeToggle = document.getElementById('mobileThemeToggle');
+    const sidebarThemeToggle = document.getElementById('sidebarThemeToggle');
+    
+    if (mobileThemeToggle) {
+        console.log('Adding click listener to mobile theme toggle');
+        mobileThemeToggle.addEventListener('click', function(e) {
+            console.log('Mobile theme toggle clicked!');
             e.preventDefault();
-            navigateToPage(href);
-        }
-
-        function navigateToPage(url) {
-            if (isTransitioning) return;
-            
-            isTransitioning = true;
-            const mainContent = document.querySelector('.main-content');
-            
-            // Apply fade out animation
-            if (mainContent) {
-                mainContent.classList.add('page-transition-out');
-            }
-
-            // Navigate after animation completes
-            setTimeout(() => {
-                window.location.href = url;
-            }, TRANSITION_DURATION);
-        }
-
-        function init() {
-            // Attach click handlers to all internal links
-            document.addEventListener('click', function(e) {
-                const link = e.target.closest('a[href]');
-                if (link) {
-                    preventDefaultNavigation.call(link, e);
-                }
-            });
-
-            // Add page load animation
-            const mainContent = document.querySelector('.main-content');
-            if (mainContent) {
-                mainContent.classList.add('page-transition-in');
-            }
-
-            // Remove transition class after animation
-            setTimeout(() => {
-                if (mainContent) {
-                    mainContent.classList.remove('page-transition-in', 'page-transition-out');
-                }
-                isTransitioning = false;
-            }, TRANSITION_DURATION + 100);
-        }
-
-        return {
-            init: init,
-            navigate: navigateToPage
-        };
-    })();
-
-    // Initialize page transitions
-    PageTransition.init();
+            e.stopPropagation();
+            window.toggleTheme();
+        });
+    }
+    
+    if (sidebarThemeToggle) {
+        console.log('Adding click listener to sidebar theme toggle');
+        sidebarThemeToggle.addEventListener('click', function(e) {
+            console.log('Sidebar theme toggle clicked!');
+            e.preventDefault();
+            e.stopPropagation();
+            window.toggleTheme();
+        });
+    }
 
     // Close sidebar when a link is clicked (mobile)
     if (sidebar) {
@@ -181,38 +177,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-
-    // Smooth scroll behavior
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    });
-});
-
-// Global sidebar toggle function
-window.toggleSidebar = function() {
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
     
-    if (sidebar && sidebarOverlay) {
-        sidebar.classList.toggle('sidebar-open');
-        sidebarOverlay.classList.toggle('overlay-visible');
-    }
-};
-
-// Global theme toggle function
-window.toggleTheme = function() {
-    const newTheme = ThemeManager.toggle();
-    showNotification(`Switched to ${newTheme} mode`, 'info');
-};
-
-// Initialize theme on page load
-document.addEventListener('DOMContentLoaded', ThemeManager.init);
+    console.log('All event listeners attached');
+});
 
 // Utility Functions
 
@@ -362,76 +329,3 @@ window.apiGet = apiGet;
 window.apiPost = apiPost;
 window.apiPut = apiPut;
 window.apiDelete = apiDelete;
-// ==================== Page Transition Handler ====================
-const PageTransition = (function() {
-    const TRANSITION_DURATION = 300;
-    let isTransitioning = false;
-
-    function preventDefaultNavigation(e) {
-        // Only intercept internal links
-        const href = e.currentTarget.getAttribute('href');
-        
-        // Skip if link is external, has target="_blank", or is an anchor link
-        if (!href || href.startsWith('http') || href.startsWith('//') || 
-            e.currentTarget.getAttribute('target') === '_blank' || 
-            href.startsWith('#') || isTransitioning) {
-            return;
-        }
-
-        e.preventDefault();
-        navigateToPage(href);
-    }
-
-    function navigateToPage(url) {
-        if (isTransitioning) return;
-        
-        isTransitioning = true;
-        const mainContent = document.querySelector('.main-content');
-        
-        // Apply fade out animation
-        if (mainContent) {
-            mainContent.classList.add('page-transition-out');
-        }
-
-        // Navigate after animation completes
-        setTimeout(() => {
-            window.location.href = url;
-        }, TRANSITION_DURATION);
-    }
-
-    function init() {
-        // Attach click handlers to all internal links
-        document.addEventListener('click', function(e) {
-            const link = e.target.closest('a[href]');
-            if (link) {
-                preventDefaultNavigation.call(link, e);
-            }
-        });
-
-        // Add page load animation
-        const mainContent = document.querySelector('.main-content');
-        if (mainContent) {
-            mainContent.classList.add('page-transition-in');
-        }
-
-        // Remove transition class after animation
-        setTimeout(() => {
-            if (mainContent) {
-                mainContent.classList.remove('page-transition-in', 'page-transition-out');
-            }
-            isTransitioning = false;
-        }, TRANSITION_DURATION + 100);
-    }
-
-    return {
-        init: init,
-        navigate: navigateToPage
-    };
-})();
-
-// Initialize page transitions when document is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', PageTransition.init);
-} else {
-    PageTransition.init();
-}

@@ -189,3 +189,43 @@ def health():
         }
     })
 
+
+@api_bp.route('/articles')
+def get_articles():
+    """Get all articles from database"""
+    try:
+        articles = list_articles()
+        return jsonify({
+            'status': 'success',
+            'articles': [{
+                'id': a.id,
+                'title': a.title,
+                'author': a.author,
+                'content': a.content,
+                'image_url': a.image_url,
+                'category_id': a.category_id,
+                'category_name': a.category.name if a.category else None,
+                'created_at': a.created_at.isoformat() if a.created_at else None,
+                'updated_at': a.updated_at.isoformat() if a.updated_at else None
+            } for a in articles]
+        })
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e), 'articles': []}), 500
+
+
+@api_bp.route('/categories')
+def get_categories():
+    """Get all categories from database"""
+    try:
+        categories = list_categories()
+        return jsonify({
+            'status': 'success',
+            'categories': [{
+                'id': c.id,
+                'name': c.name,
+                'description': c.description
+            } for c in categories]
+        })
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e), 'categories': []}), 500
+

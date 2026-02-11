@@ -127,7 +127,7 @@ def live_feed():
 @article_bp.route('/bookmarks')
 def bookmarks_page():
     """Show user's bookmarked articles"""
-    articles = list_articles()
+    articles = list_articles(page=None, per_page=None)
     categories = list_categories()
     return render_template('bookmarks.html', articles=articles, categories=categories)
 
@@ -156,15 +156,23 @@ def article_detail(article_id):
 
 @article_bp.route('/manage')
 def manage_articles():
-    articles = list_articles()
+    articles = list_articles(page=None, per_page=None)
     categories = list_categories()
     return render_template('manage_articles.html', articles=articles, categories=categories)
 
 
 @article_bp.route('/api/articles')
 def api_list_articles():
-    articles = [a.to_dict() for a in list_articles()]
-    return jsonify(articles)
+    articles = list_articles(page=None, per_page=None)
+    return jsonify([{
+        'id': a.id,
+        'title': a.title,
+        'author': a.author,
+        'content': a.content,
+        'image_url': a.image_url,
+        'category_id': a.category_id,
+        'created_at': a.created_at.isoformat() if a.created_at else None
+    } for a in articles])
 
 
 @article_bp.route('/api/articles/<int:aid>', methods=['PUT', 'DELETE'])

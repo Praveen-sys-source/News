@@ -194,7 +194,7 @@ def health():
 def get_articles():
     """Get all articles from database"""
     try:
-        articles = list_articles()
+        articles = list_articles(page=None, per_page=None)
         return jsonify({
             'status': 'success',
             'articles': [{

@@ -229,3 +229,13 @@ def get_categories():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e), 'categories': []}), 500
 
+
+@api_bp.route('/redirect')
+def redirect_external():
+    """Redirect to external URL - ensures links open properly"""
+    from flask import redirect as flask_redirect
+    url = request.args.get('url', '')
+    if url and (url.startswith('http://') or url.startswith('https://')):
+        return flask_redirect(url, code=302)
+    return jsonify({'status': 'error', 'message': 'Invalid URL'}), 400
+

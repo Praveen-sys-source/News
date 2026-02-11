@@ -1,0 +1,36 @@
+[INFO] Production mode: First deployment, seeding initial data
+[INFO] Database has 7 articles and 6 categories (user deletions respected)
+[INFO] Database already properly seeded. Articles: 7, Categories: 6
+ * Serving Flask app 'news_app'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.0.1.236:8080
+Press CTRL+C to quit
+127.0.0.1 - - [11/Feb/2026 11:52:07] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 11:52:07] "GET /static/js/state.js HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 11:52:07] "GET /static/js/main.js HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 11:52:07] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 11:52:07] "GET /api/articles HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 11:52:07] "GET /api/categories HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 11:52:09] "GET /live-feed HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 11:52:09] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 11:52:09] "GET /static/js/main.js HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 11:52:10] "GET /api/live?country=us&pageSize=10&page=1 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 11:52:38] "GET /live-feed HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 11:52:39] "GET /static/js/main.js HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 11:52:39] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 11:52:39] "GET /api/live?country=us&pageSize=10&page=1 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 11:52:40] "GET /live-feed HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 11:52:40] "GET /static/js/main.js HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 11:52:40] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 11:52:40] "GET /api/live?country=us&pageSize=10&page=1 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 11:54:29] "GET /live-feed HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 11:54:31] "GET /static/css/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 11:54:31] "GET /static/js/main.js HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 11:54:33] "GET /api/live?country=us&pageSize=10&page=1 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 11:54:38] "GET /api/redirect?url=https://www.cnbc.com/2026/02/10/coca-cola-ko-q4-2025-earnings.html HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 11:54:48] "GET /api/redirect?url=https://www.politico.com/news/2026/02/10/after-greenland-its-the-micro-agressions-00772114 HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 11:55:02] "GET /api/search?q=cricket&sortBy=publishedAt&pageSize=20&page=1 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 11:55:15] "GET /api/live?country=us&pageSize=10&page=1 HTTP/1.1" 200 -

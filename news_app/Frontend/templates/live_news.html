@@ -375,14 +375,15 @@ function createArticleCard(article) {
     const title = article.title ? article.title.substring(0, 70) : 'Untitled';
     
     let link = article.url || article.link || '';
-    if (!link || (!link.startsWith('http://') && !link.startsWith('https://'))) {
-        link = '';
+    // Ensure URL is properly formatted
+    if (link && !link.startsWith('http://') && !link.startsWith('https://')) {
+        link = 'https://' + link;
     }
     
-    const hasValidLink = link !== '';
+    const hasValidLink = link !== '' && (link.startsWith('http://') || link.startsWith('https://'));
     
     const cardDiv = document.createElement('div');
-    cardDiv.className = 'live-card-modern bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300';
+    cardDiv.className = 'live-card-modern bg-white rounded-xl shadow-md overflow-hidden';
     
     const imageDiv = document.createElement('div');
     imageDiv.className = 'relative overflow-hidden h-52';
@@ -393,7 +394,7 @@ function createArticleCard(article) {
              height="208"
              loading="lazy"
              decoding="async"
-             class="w-full h-full object-cover hover:scale-105 transition duration-500"
+             class="w-full h-full object-cover"
              onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22208%22 viewBox=%220 0 400 208%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22400%22 height=%22208%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%236b7280%22 font-family=%22system-ui%22 font-size=%2216%22%3ENo Image%3C/text%3E%3C/svg%3E'">
         <div class="absolute top-3 right-3 bg-red-600 text-white px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
             <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
@@ -423,9 +424,14 @@ function createArticleCard(article) {
     buttonsDiv.className = 'flex gap-2';
     
     const readBtn = document.createElement('a');
-    readBtn.href = hasValidLink ? link : '#';
-    readBtn.target = hasValidLink ? '_blank' : '';
-    readBtn.rel = hasValidLink ? 'noopener noreferrer' : '';
+    if (hasValidLink) {
+        readBtn.href = `/api/redirect?url=${encodeURIComponent(link)}`;
+        readBtn.target = '_blank';
+        readBtn.rel = 'noopener noreferrer';
+    } else {
+        readBtn.href = '#';
+        readBtn.onclick = (e) => e.preventDefault();
+    }
     readBtn.className = `flex-1 px-4 py-2.5 rounded-lg transition duration-200 text-center font-semibold text-sm flex items-center justify-center gap-2 ${hasValidLink ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-gray-400 text-white opacity-60 cursor-not-allowed'}`;
     readBtn.innerHTML = `
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -433,9 +439,6 @@ function createArticleCard(article) {
         </svg>
         ${hasValidLink ? 'Read Full Article' : 'No Link Available'}
     `;
-    if (!hasValidLink) {
-        readBtn.onclick = function(e) { e.preventDefault(); };
-    }
     
     const shareBtn = document.createElement('button');
     shareBtn.type = 'button';

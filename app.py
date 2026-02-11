@@ -1,4 +1,5 @@
 from news_app import create_app
+from flask import request
 import os
 
 # Create app instance for Gunicorn
@@ -23,9 +24,6 @@ def add_cache_headers(response):
         response.headers['Pragma'] = 'no-cache'
         response.headers['Expires'] = '0'
     return response
-
-# Import Flask modules for caching (needs to be after app creation)
-from flask import request
 
 if __name__ == '__main__':
     cert = os.getenv('SSL_CERT')

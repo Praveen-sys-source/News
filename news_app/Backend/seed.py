@@ -40,6 +40,44 @@ STANDARD_ARTICLES = [
 ]
 
 
+def is_production():
+    """
+    Check if running in production environment (Render.com)
+    """
+    flask_env = os.getenv('FLASK_ENV', '').lower()
+    is_render = os.path.exists('/opt/render/project/src')
+    return flask_env == 'production' or is_render
+
+
+def should_seed_data():
+    """
+    Determine if seeding should occur based on environment and seeding status.
+    
+    Returns:
+        bool: True if seeding should occur, False otherwise
+        
+    Seeding rules:
+    - Development: Always seed
+    - Production first deploy: Seed (DATABASE_SEEDED not set)
+    - Production after first deploy: Don't seed (DATABASE_SEEDED=true)
+    """
+    if not is_production():
+        # Development environment - always allow seeding
+        return True
+    
+    # Production environment
+    database_seeded = os.getenv('DATABASE_SEEDED', '').lower() == 'true'
+    
+    if database_seeded:
+        # Already seeded on first deployment, don't reseed
+        print('[INFO] Production mode: DATABASE_SEEDED=true, skipping seeding')
+        return False
+    else:
+        # First deployment, allow initial seeding
+        print('[INFO] Production mode: First deployment, seeding initial data')
+        return True
+
+
 def verify_seed_data():
     """
     Verify that the seed data exists and is correct.
@@ -100,12 +138,20 @@ def seed_data(app=None, force=False):
     
     This function respects user deletions. If users delete articles or categories,
     they stay deleted. Only --force flag or empty database will trigger reseeding.
+    
+    In production, seeding only occurs if DATABASE_SEEDED is not set to 'true'.
+    This prevents the same seed data from appearing on every deployment.
     """
     if app is None:
         from .. import create_app
         app = create_app()
     
     with app.app_context():
+        # Check if we should seed in this environment
+        if not should_seed_data():
+            print('[INFO] Seeding disabled for this environment')
+            return True
+        
         try:
             # Check current state
             existing_cats = list_categories()

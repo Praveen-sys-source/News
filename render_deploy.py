@@ -121,13 +121,17 @@ def ensure_sample_data():
         final_articles = list_articles()
         final_categories = list_categories()
         final_media = list_media()
-        
+
+        # Set DATABASE_SEEDED environment variable to prevent re-seeding on subsequent deployments
+        os.environ['DATABASE_SEEDED'] = 'true'
+
         print(f"\n🎉 Deployment setup complete!")
         print(f"   📂 Categories: {len(final_categories)} total ({categories_added} added)")
         print(f"   📰 Articles: {len(final_articles)} total ({articles_added} added)")
         print(f"   🖼️  Media files: {len(final_media)} in database")
         print(f"   📁 Upload directories configured")
-        
+        print(f"   🔒 DATABASE_SEEDED=true set (will prevent re-seeding on next deploy)")
+
         return True
 
 if __name__ == '__main__':
@@ -144,3 +148,4 @@ if __name__ == '__main__':
         import traceback
         traceback.print_exc()
         sys.exit(1)
+

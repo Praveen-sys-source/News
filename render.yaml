@@ -13,6 +13,7 @@ services:
         value: /opt/render/project/src
       - key: DISK_MOUNT_PATH
         value: /opt/render/project/src
+      # NOTE: DATABASE_SEEDED is set by render_deploy.py after initial seeding
     disk:
       name: media-storage
       mountPath: /opt/render/project/src

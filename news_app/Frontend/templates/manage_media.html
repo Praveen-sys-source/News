@@ -254,7 +254,8 @@
         item.className = 'media-item group relative bg-gray-100 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition duration-200';
         item.setAttribute('data-id', media.id);
         
-        const imageUrl = '/static/uploads/' + media.filename;
+        // Use the file_path from API response (already contains correct URL from get_url())
+        const imageUrl = media.file_path;
         const escapedOriginalName = media.original_name.replace(/'/g, "\\'");
         
         item.innerHTML = '<div class="aspect-square">' +
